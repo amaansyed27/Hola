@@ -5,6 +5,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/api/greetings/:id",
+      "destination": "/api/greetings/[id]"
+    },
+    {
       "source": "/:path*",
       "destination": "/index.html"
     }

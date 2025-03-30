@@ -4,22 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Heart, Home, Send } from "lucide-react";
 import GreetingCard from "@/components/greeting/GreetingCard";
 import ContinuousEffects from "@/components/greeting/ContinuousEffects";
-import { getGreetingById } from "@/utils/greetingData";
+import { fetchGreetingById } from "@/utils/api"; // Add a utility function to fetch data from a backend
 import { Greeting, ContinuousEffectType } from "@/types/greeting";
 
 const ViewGreetingPage = () => {
   const { id } = useParams<{ id: string }>();
   const [greeting, setGreeting] = useState<Greeting | null>(null);
   const [loaded, setLoaded] = useState(false);
-  
+
   useEffect(() => {
     if (!id) return;
-    
-    const foundGreeting = getGreetingById(id);
-    if (foundGreeting) {
-      setGreeting(foundGreeting);
-      setTimeout(() => setLoaded(true), 500);
-    }
+
+    const fetchGreeting = async () => {
+      try {
+        const foundGreeting = await fetchGreetingById(id); // Fetch greeting from backend
+        if (foundGreeting) {
+          setGreeting(foundGreeting);
+          setTimeout(() => setLoaded(true), 500);
+        } else {
+          setGreeting(null);
+        }
+      } catch (error) {
+        console.error("Error fetching greeting:", error);
+        setGreeting(null);
+      }
+    };
+
+    fetchGreeting();
   }, [id]);
 
   if (!greeting) {
@@ -44,7 +55,7 @@ const ViewGreetingPage = () => {
   const continuousEffect = greeting.continuousEffect || 'none';
   // Use the sender's preference for whether effects should be enabled
   const effectsEnabled = greeting.continuousEffectEnabled !== false;
-  
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background relative px-4 py-12">
       {/* Continuous effects container - only show if enabled by the sender */}
@@ -54,17 +65,17 @@ const ViewGreetingPage = () => {
           enabled={true}
         />
       )}
-      
+
       <div className="max-w-xl w-full">
         <div className="my-8 animate-fade-in" style={{ animationDelay: "0.5s" }}>
           <div className="max-height-container">
             <GreetingCard greeting={greeting} isAnimated={true} />
           </div>
         </div>
-        
+
         <div className="flex flex-col items-center mt-8 opacity-0 animate-fade-in" style={{ animationDelay: "1.5s", animationFillMode: "forwards" }}>
           {/* Remove the toggle control for recipients */}
-          
+
           <Button 
             variant="outline" 
             size="sm" 
@@ -77,7 +88,7 @@ const ViewGreetingPage = () => {
               like.style.top = '100%';
               like.style.animation = 'float 3s ease-out forwards';
               document.body.appendChild(like);
-              
+
               setTimeout(() => {
                 like.remove();
               }, 3000);
@@ -86,7 +97,7 @@ const ViewGreetingPage = () => {
             <Heart size={16} className="text-red-500" />
             <span>Send Love</span>
           </Button>
-          
+
           <div className="mt-12 flex flex-col items-center animate-fade-in" style={{ animationDelay: "2s" }}>
             <p className="text-sm text-muted-foreground mb-3">Create your own greeting card</p>
             <Link to="/create">
@@ -98,7 +109,7 @@ const ViewGreetingPage = () => {
           </div>
         </div>
       </div>
-      
+
       <footer className="w-full text-center mt-16 text-sm text-muted-foreground">
         <p>Made with ❤️ by Hola!</p>
         <Link to="/create" className="text-hola-purple hover:text-hola-purple/80 transition-colors">
