@@ -251,7 +251,11 @@ const CreatePage = () => {
         const updatedThemes = [...availableThemes.filter(theme => !theme.custom), customTheme];
         setAvailableThemes(updatedThemes);
         
-        setGreeting(prev => ({ ...prev, themeId: customThemeId }));
+        setGreeting(prev => ({
+          ...prev,
+          themeId: customThemeId,
+          customTheme, // Include the custom theme in the greeting data
+        }));
 
         toast({
           title: "Image uploaded",
@@ -283,7 +287,11 @@ const CreatePage = () => {
     setAvailableThemes(newThemes);
     
     setTimeout(() => {
-      setGreeting(prev => ({...prev, themeId: customThemeId}));
+      setGreeting(prev => ({
+        ...prev,
+        themeId: customThemeId,
+        customTheme, // Include the custom theme in the greeting data
+      }));
     }, 0);
     
     try {

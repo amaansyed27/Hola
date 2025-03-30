@@ -58,4 +58,6 @@ export interface Greeting {
   elements?: CardElement[];
   continuousEffect?: ContinuousEffectType;
   continuousEffectEnabled?: boolean;
+  customTheme?: GreetingTheme; // Add this property to store custom themes
+  availableThemes?: GreetingTheme[]; // Add this property to store available themes
 }

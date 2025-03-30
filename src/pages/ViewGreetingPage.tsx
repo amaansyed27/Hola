@@ -5,7 +5,7 @@ import { Heart, Home, Send } from "lucide-react";
 import GreetingCard from "@/components/greeting/GreetingCard";
 import ContinuousEffects from "@/components/greeting/ContinuousEffects";
 import { fetchGreetingBlob } from "@/utils/api"; // Add a utility function to fetch data from jsonblob.com
-import { Greeting, ContinuousEffectType } from "@/types/greeting";
+import { Greeting, ContinuousEffectType, GreetingTheme } from "@/types/greeting";
 
 const ViewGreetingPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +20,16 @@ const ViewGreetingPage = () => {
         const foundGreeting = await fetchGreetingBlob(id); // Fetch greeting from jsonblob.com
         if (foundGreeting) {
           setGreeting(foundGreeting as Greeting);
+
+          // Add custom theme to available themes if present
+          if (foundGreeting.customTheme) {
+            const customTheme = foundGreeting.customTheme as GreetingTheme;
+            setGreeting(prev => ({
+              ...prev,
+              availableThemes: [...(prev?.availableThemes || []), customTheme],
+            }));
+          }
+
           setTimeout(() => setLoaded(true), 500);
         } else {
           throw new Error("Greeting not found");

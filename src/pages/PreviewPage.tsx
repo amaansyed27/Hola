@@ -8,7 +8,7 @@ import Header from "@/components/layout/Header";
 import GreetingCard from "@/components/greeting/GreetingCard";
 import ContinuousEffects from "@/components/greeting/ContinuousEffects";
 import { fetchGreetingBlob } from "@/utils/api";
-import { Greeting, ContinuousEffectType } from "@/types/greeting";
+import { Greeting, ContinuousEffectType, GreetingTheme } from "@/types/greeting";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -26,9 +26,19 @@ const PreviewPage = () => {
 
     const fetchGreeting = async () => {
       try {
-        const foundGreeting = (await fetchGreetingBlob(id)) as Greeting; // Cast to Greeting type
+        const foundGreeting = (await fetchGreetingBlob(id)) as Greeting;
         if (foundGreeting) {
           setGreeting(foundGreeting);
+
+          // Add custom theme to available themes if present
+          if (foundGreeting.customTheme) {
+            const customTheme = foundGreeting.customTheme as GreetingTheme;
+            setGreeting(prev => ({
+              ...prev,
+              availableThemes: [...(prev?.availableThemes || []), customTheme],
+            }));
+          }
+
           setEffectsEnabled(foundGreeting.continuousEffectEnabled ?? true);
           const baseUrl = window.location.origin;
           setShareUrl(`${baseUrl}/greeting/${id}`);

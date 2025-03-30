@@ -1,3 +1,5 @@
+import { Greeting, GreetingTheme } from "@/types/greeting"; // Import types
+
 const JSONBLOB_BASE_URL = "https://jsonblob.com/api/jsonBlob";
 const BLOB_ID = "1355935448937193472"; // Provided blob ID
 
@@ -17,9 +19,17 @@ export const fetchAllGreetings = async (): Promise<Record<string, object>> => {
   return response.json();
 };
 
-export const fetchGreetingBlob = async (greetingId: string): Promise<object | null> => {
+export const fetchGreetingBlob = async (greetingId: string): Promise<Greeting | null> => {
   const allGreetings = await fetchAllGreetings();
-  return allGreetings[greetingId] || null;
+  const greeting = allGreetings[greetingId] as Greeting | null; // Explicitly type as Greeting or null
+
+  if (greeting && greeting.customTheme) {
+    // Add the custom theme to the available themes if it exists
+    const customTheme = greeting.customTheme as GreetingTheme;
+    greeting.availableThemes = [...(greeting.availableThemes || []), customTheme];
+  }
+
+  return greeting;
 };
 
 export const createOrUpdateGreetingBlob = async (greetingId: string, greeting: object): Promise<void> => {
