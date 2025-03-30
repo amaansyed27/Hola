@@ -483,9 +483,9 @@ const CreatePage = () => {
 
   const handleTextColorChange = (color: string) => {
     const customThemeId = greeting.themeId.startsWith("custom") ? greeting.themeId : "custom-text-" + Date.now();
-    
+
     const currentTheme = getThemeById(greeting.themeId) || availableThemes[0];
-    
+
     const customTheme: GreetingTheme = {
       ...currentTheme,
       id: customThemeId,
@@ -494,25 +494,29 @@ const CreatePage = () => {
       accentColorClass: "", // We'll override with inline style
       occasionTypes: [greeting.occasion as GreetingType],
       custom: true,
-      customTextColor: color
+      customTextColor: color // Ensure customTextColor is included
     };
-    
+
     const newThemes = [...availableThemes.filter(theme => theme.id !== customThemeId), customTheme];
     setAvailableThemes(newThemes);
-    
-    setGreeting(prev => ({...prev, themeId: customThemeId}));
-    
+
+    setGreeting(prev => ({
+      ...prev,
+      themeId: customThemeId,
+      customTheme // Embed the updated custom theme in the greeting data
+    }));
+
     try {
       const customThemesStr = localStorage.getItem('hola-custom-themes') || '[]';
       const customThemes = JSON.parse(customThemesStr) as GreetingTheme[];
       localStorage.setItem('hola-custom-themes', JSON.stringify([
-        ...customThemes.filter(t => t.id !== customThemeId), 
+        ...customThemes.filter(t => t.id !== customThemeId),
         customTheme
       ]));
     } catch (error) {
       console.error("Error saving custom theme:", error);
     }
-    
+
     toast({
       title: "Text color updated",
       description: "Custom text color applied to card",

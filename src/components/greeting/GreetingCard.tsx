@@ -99,8 +99,8 @@ const GreetingCard = ({ greeting, isAnimated = false, fullCard = true }: Greetin
     }
   }
 
-  // Add custom text color if specified
-  const textColor = theme.customTextColor || null;
+  // Add custom text color if specified, fallback to "inherit" if missing
+  const textColor = theme.customTextColor || "inherit";
 
   // Create getDefaultElements function here to match existing implementation
   function getDefaultElements(): CardElement[] {
@@ -188,7 +188,7 @@ const GreetingCard = ({ greeting, isAnimated = false, fullCard = true }: Greetin
             onChange={() => {}} // No changes allowed in preview mode
             theme={theme}
             preview={true}
-            customTextColor={textColor}
+            customTextColor={textColor} // Pass custom text color to ElementsManager
           />
         </>
       )}
