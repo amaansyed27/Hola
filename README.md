@@ -6,7 +6,7 @@ HOLA is a React-based web application that allows users to create and share cust
 
 ## Live Demo
 
-Check out the live demo: [HOLA Greeting Cards](https://hola-greet.vercel.app/)
+Check out the live demo: [HOLA Greeting Cards](https://holagreetings.vercel.app/)
 
 ## Features
 
