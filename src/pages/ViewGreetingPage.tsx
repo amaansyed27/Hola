@@ -75,29 +75,6 @@ const ViewGreetingPage = () => {
 
         <div className="flex flex-col items-center mt-8 opacity-0 animate-fade-in" style={{ animationDelay: "1.5s", animationFillMode: "forwards" }}>
           {/* Remove the toggle control for recipients */}
-
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="rounded-full gap-2 px-4"
-            onClick={() => {
-              const like = document.createElement('div');
-              like.className = 'fixed text-4xl';
-              like.innerHTML = '❤️';
-              like.style.left = `${Math.random() * 80 + 10}%`;
-              like.style.top = '100%';
-              like.style.animation = 'float 3s ease-out forwards';
-              document.body.appendChild(like);
-
-              setTimeout(() => {
-                like.remove();
-              }, 3000);
-            }}
-          >
-            <Heart size={16} className="text-red-500" />
-            <span>Send Love</span>
-          </Button>
-
           <div className="mt-12 flex flex-col items-center animate-fade-in" style={{ animationDelay: "2s" }}>
             <p className="text-sm text-muted-foreground mb-3">Create your own greeting card</p>
             <Link to="/create">
