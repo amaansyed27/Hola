@@ -12,20 +12,21 @@ interface GreetingCardProps {
 }
 
 const GreetingCard = ({ greeting, isAnimated = false, fullCard = true }: GreetingCardProps) => {
-  const theme = getThemeById(greeting.themeId);
+  const predefinedTheme = getThemeById(greeting.themeId);
+  const theme = greeting.customTheme || predefinedTheme; // Use customTheme if available, otherwise fallback to predefinedTheme
   const [showElements, setShowElements] = useState(!isAnimated);
   const [animationKey, setAnimationKey] = useState(Date.now());
-  
+
   useEffect(() => {
     if (isAnimated) {
       setShowElements(false);
       // Reset animation by updating key
       setAnimationKey(Date.now());
-      
+
       const timer = setTimeout(() => {
         setShowElements(true);
       }, 300);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isAnimated, greeting.animationType]);
@@ -79,7 +80,7 @@ const GreetingCard = ({ greeting, isAnimated = false, fullCard = true }: Greetin
 
   // Create card background style based on theme settings
   const cardStyle: React.CSSProperties = {};
-  
+
   if (theme.backgroundImage) {
     // Custom background image
     cardStyle.backgroundImage = `url("${theme.backgroundImage}")`;
@@ -88,7 +89,7 @@ const GreetingCard = ({ greeting, isAnimated = false, fullCard = true }: Greetin
   } else if (theme.backgroundGradient) {
     // For gradients, we'll set the background directly
     cardStyle.background = theme.backgroundGradient;
-    
+
     // For animated gradients, apply animation properties directly to the style
     if (theme.animatedGradient) {
       cardStyle.backgroundSize = '200% 200%';
@@ -108,16 +109,16 @@ const GreetingCard = ({ greeting, isAnimated = false, fullCard = true }: Greetin
                         greeting.occasion === 'festival' ? 'gift' :
                         greeting.occasion === 'congratulations' ? 'award' :
                         greeting.occasion === 'thankyou' ? 'thumbs-up' : 'smile';
-    
+
     const defaultHeading = greeting.occasion === 'birthday' ? 'Happy Birthday!' : 
                            greeting.occasion === 'anniversary' ? 'Happy Anniversary!' :
                            greeting.occasion === 'festival' ? 'Happy Celebrations!' :
                            greeting.occasion === 'congratulations' ? 'Congratulations!' :
                            greeting.occasion === 'thankyou' ? 'Thank You!' : 'Hello!';
-    
+
     const recipientName = greeting.recipientName || "Friend";
     const senderName = greeting.senderName || "Me";
-    
+
     return [
       {
         id: "default-icon",
@@ -156,7 +157,7 @@ const GreetingCard = ({ greeting, isAnimated = false, fullCard = true }: Greetin
       }
     ];
   }
-  
+
   // Determine which CSS classes to apply
   const backgroundClass = theme.backgroundImage || theme.backgroundGradient 
     ? '' 
@@ -172,7 +173,7 @@ const GreetingCard = ({ greeting, isAnimated = false, fullCard = true }: Greetin
     ${fullCard ? 'greeting-card-fullsize' : 'max-w-md mx-auto'}
     ${isAnimated && showElements ? getAnimationClass() : ''}
   `;
-    
+
   return (
     <div 
       className={cardClasses}

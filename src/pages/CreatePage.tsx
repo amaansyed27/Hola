@@ -363,7 +363,8 @@ const CreatePage = () => {
     ...greeting as Greeting,
     id: "preview",
     createdAt: Date.now(),
-    elements: elements
+    elements: elements,
+    customTheme: greeting.customTheme, // Ensure customTheme is passed to the preview
   };
 
   const elementTypes = [
