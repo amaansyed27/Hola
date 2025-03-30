@@ -6,7 +6,8 @@ import {
   ToggleLeft,
   AlignLeft,
   AlignCenter,
-  AlignRight
+  AlignRight,
+  Keyboard
 } from "lucide-react";
 import { 
   Select,
@@ -16,6 +17,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EmojiPicker } from "../../greeting/EmojiPicker";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 
 interface EmojiElementProps {
   element: CardElement;
@@ -31,6 +34,7 @@ const EmojiElement = ({
   preview = false 
 }: EmojiElementProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [emojiTab, setEmojiTab] = useState<string>("picker");
   
   // Default values for safety
   const safeElement = {
@@ -72,6 +76,14 @@ const EmojiElement = ({
     onChange({ ...safeElement, content: emoji });
   };
 
+  const handleCustomEmojiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only update if the input contains at least one character
+    if (value.length > 0) {
+      onChange({ ...safeElement, content: value });
+    }
+  };
+
   return (
     <div className="w-full mb-4 border border-border rounded-md p-3 bg-card">
       <div className="flex items-center justify-between mb-2">
@@ -101,7 +113,50 @@ const EmojiElement = ({
 
       {isEditing ? (
         <div className="space-y-3">
-          <EmojiPicker onEmojiSelect={handleEmojiSelect} selectedEmoji={safeElement.content} />
+          <Tabs 
+            defaultValue="picker" 
+            value={emojiTab} 
+            onValueChange={setEmojiTab}
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="picker" className="flex items-center gap-1">
+                <Smile size={14} />
+                <span>Emoji Picker</span>
+              </TabsTrigger>
+              <TabsTrigger value="custom" className="flex items-center gap-1">
+                <Keyboard size={14} />
+                <span>Custom Input</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="picker" className="mt-2">
+              <EmojiPicker onEmojiSelect={handleEmojiSelect} selectedEmoji={safeElement.content} />
+            </TabsContent>
+
+            <TabsContent value="custom" className="mt-2">
+              <div className="space-y-2">
+                <div className="text-sm">
+                  Type or paste emoji directly:
+                </div>
+                <div className="flex gap-2 items-center">
+                  <div className="border p-2 rounded-md min-w-[70px] h-10 flex items-center justify-center">
+                    <span className="text-2xl">{safeElement.content}</span>
+                  </div>
+                  <Input
+                    value={safeElement.content}
+                    onChange={handleCustomEmojiChange}
+                    className="text-2xl text-center"
+                    maxLength={4} // Allow for multi-character emoji sequences
+                    placeholder="✨"
+                  />
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Press Win+. (Windows) or Ctrl+Cmd+Space (Mac) to open your system emoji picker
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
 
           <div className="flex items-center gap-2 pt-3">
             {/* Size selector */}
