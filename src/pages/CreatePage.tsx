@@ -238,23 +238,13 @@ const CreatePage = () => {
           backgroundImage: imageData
         };
         
-        try {
-          const customThemesStr = localStorage.getItem('hola-custom-themes');
-          const customThemes = customThemesStr ? JSON.parse(customThemesStr) as GreetingTheme[] : [];
-          const filteredThemes = customThemes.filter(t => t.id !== customThemeId);
-          filteredThemes.push(customTheme);
-          localStorage.setItem('hola-custom-themes', JSON.stringify(filteredThemes));
-        } catch (error) {
-          console.error("Error saving custom theme:", error);
-        }
-        
         const updatedThemes = [...availableThemes.filter(theme => !theme.custom), customTheme];
         setAvailableThemes(updatedThemes);
         
         setGreeting(prev => ({
           ...prev,
           themeId: customThemeId,
-          customTheme, // Include the custom theme in the greeting data
+          customTheme, // Embed the custom theme in the greeting data
         }));
 
         toast({
@@ -290,20 +280,9 @@ const CreatePage = () => {
       setGreeting(prev => ({
         ...prev,
         themeId: customThemeId,
-        customTheme, // Include the custom theme in the greeting data
+        customTheme, // Embed the custom theme in the greeting data
       }));
     }, 0);
-    
-    try {
-      const customThemesStr = localStorage.getItem('hola-custom-themes') || '[]';
-      const customThemes = JSON.parse(customThemesStr) as GreetingTheme[];
-      localStorage.setItem('hola-custom-themes', JSON.stringify([
-        ...customThemes.filter(t => t.id !== customThemeId), 
-        customTheme
-      ]));
-    } catch (error) {
-      console.error("Error saving custom theme:", error);
-    }
     
     toast({
       title: "Gradient applied",
@@ -362,7 +341,7 @@ const CreatePage = () => {
     };
 
     try {
-      await createOrUpdateGreetingBlob(completeGreeting.id, completeGreeting); // Save greeting to jsonblob.com
+      await createOrUpdateGreetingBlob(completeGreeting.id, completeGreeting); // Save greeting by ID
       toast({
         title: "Greeting created!",
         description: "Your greeting has been created successfully.",

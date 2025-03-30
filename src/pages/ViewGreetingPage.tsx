@@ -17,19 +17,9 @@ const ViewGreetingPage = () => {
 
     const fetchGreeting = async () => {
       try {
-        const foundGreeting = await fetchGreetingBlob(id); // Fetch greeting from jsonblob.com
+        const foundGreeting = await fetchGreetingBlob(id); // Fetch greeting by ID
         if (foundGreeting) {
-          setGreeting(foundGreeting as Greeting);
-
-          // Add custom theme to available themes if present
-          if (foundGreeting.customTheme) {
-            const customTheme = foundGreeting.customTheme as GreetingTheme;
-            setGreeting(prev => ({
-              ...prev,
-              availableThemes: [...(prev?.availableThemes || []), customTheme],
-            }));
-          }
-
+          setGreeting(foundGreeting);
           setTimeout(() => setLoaded(true), 500);
         } else {
           throw new Error("Greeting not found");
