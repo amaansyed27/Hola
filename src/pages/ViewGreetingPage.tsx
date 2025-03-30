@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, Home, Send } from "lucide-react";
 import GreetingCard from "@/components/greeting/GreetingCard";
 import ContinuousEffects from "@/components/greeting/ContinuousEffects";
-import { fetchGreetingById } from "@/utils/api"; // Add a utility function to fetch data from a backend
-import { getGreetingById } from "@/utils/greetingData"; // Import fallback function
+import { fetchGreetingBlob } from "@/utils/api"; // Add a utility function to fetch data from jsonblob.com
 import { Greeting, ContinuousEffectType } from "@/types/greeting";
 
 const ViewGreetingPage = () => {
@@ -18,22 +17,16 @@ const ViewGreetingPage = () => {
 
     const fetchGreeting = async () => {
       try {
-        const foundGreeting = await fetchGreetingById(id); // Fetch greeting from backend
+        const foundGreeting = await fetchGreetingBlob(id); // Fetch greeting from jsonblob.com
         if (foundGreeting) {
-          setGreeting(foundGreeting);
+          setGreeting(foundGreeting as Greeting);
           setTimeout(() => setLoaded(true), 500);
         } else {
-          setGreeting(null);
+          throw new Error("Greeting not found");
         }
       } catch (error) {
-        console.error("Error fetching greeting from API, falling back to local storage:", error);
-        const fallbackGreeting = getGreetingById(id); // Fallback to local storage
-        if (fallbackGreeting) {
-          setGreeting(fallbackGreeting);
-          setTimeout(() => setLoaded(true), 500);
-        } else {
-          setGreeting(null);
-        }
+        console.error("Error fetching greeting blob:", error);
+        setGreeting(null);
       }
     };
 

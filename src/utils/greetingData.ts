@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
+import fs from "fs";
+import path from "path";
 import { Greeting, GreetingTheme, GreetingType, AnimationType, CardElement } from '@/types/greeting';
 
 // Generate a unique ID for new greetings
@@ -6,12 +8,20 @@ export const generateGreetingId = (): string => {
   return uuidv4();
 };
 
-// Save greeting to localStorage
+// Save greeting to centralized JSON file
 export const saveGreeting = (greeting: Greeting): void => {
-  const greetingsStr = localStorage.getItem("greetings") || "{}";
-  const greetings = JSON.parse(greetingsStr);
-  greetings[greeting.id] = greeting;
-  localStorage.setItem("greetings", JSON.stringify(greetings));
+  const filePath = path.resolve(process.cwd(), "data", "greetings.json");
+
+  try {
+    const data = fs.readFileSync(filePath, "utf-8");
+    const greetings = JSON.parse(data);
+
+    greetings[greeting.id] = greeting;
+
+    fs.writeFileSync(filePath, JSON.stringify(greetings, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Error saving greeting:", error);
+  }
 };
 
 // Get greeting by ID

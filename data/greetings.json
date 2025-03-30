@@ -1,0 +1,12 @@
+{
+  "63902476-66f3-4351-a617-0a36b1f0cd15": {
+    "id": "63902476-66f3-4351-a617-0a36b1f0cd15",
+    "recipientName": "John",
+    "senderName": "Jane",
+    "message": "Happy Birthday!",
+    "occasion": "birthday",
+    "themeId": "birthday-festive",
+    "continuousEffect": "confetti",
+    "continuousEffectEnabled": true
+  }
+}

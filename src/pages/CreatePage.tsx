@@ -50,6 +50,7 @@ import {
   getThemeById,
   getDefaultElements
 } from "@/utils/greetingData";
+import { createOrUpdateGreetingBlob } from "@/utils/api";
 import { Greeting, GreetingType, CardElement, ElementType, GreetingTheme, TextAnimationType, ScrollEffectType, ContinuousEffectType } from "@/types/greeting";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
@@ -341,25 +342,32 @@ const CreatePage = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const completeGreeting: Greeting = {
       ...greeting as Greeting,
       id: generateGreetingId(),
       createdAt: Date.now(),
       message: greeting.message || "",
-      elements: elements
+      elements: elements,
     };
-    
-    saveGreeting(completeGreeting);
-    
-    toast({
-      title: "Greeting created!",
-      description: "Your greeting has been created successfully.",
-    });
-    
-    navigate(`/preview/${completeGreeting.id}`);
+
+    try {
+      await createOrUpdateGreetingBlob(completeGreeting.id, completeGreeting); // Save greeting to jsonblob.com
+      toast({
+        title: "Greeting created!",
+        description: "Your greeting has been created successfully.",
+      });
+      navigate(`/preview/${completeGreeting.id}`); // Navigate to preview page with greeting ID
+    } catch (error) {
+      console.error("Error saving greeting blob:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create greeting. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const currentTheme = getThemeById(greeting.themeId || "");

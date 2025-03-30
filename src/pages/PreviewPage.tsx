@@ -7,7 +7,7 @@ import { Share2, Copy, ArrowLeft, Eye, Sparkles } from "lucide-react";
 import Header from "@/components/layout/Header";
 import GreetingCard from "@/components/greeting/GreetingCard";
 import ContinuousEffects from "@/components/greeting/ContinuousEffects";
-import { getGreetingById } from "@/utils/greetingData";
+import { fetchGreetingBlob } from "@/utils/api";
 import { Greeting, ContinuousEffectType } from "@/types/greeting";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -23,23 +23,30 @@ const PreviewPage = () => {
   
   useEffect(() => {
     if (!id) return;
-    
-    const foundGreeting = getGreetingById(id);
-    if (foundGreeting) {
-      setGreeting(foundGreeting);
-      // Initialize effects enabled state from greeting
-      setEffectsEnabled(foundGreeting.continuousEffectEnabled ?? true);
-      // Create the shareable URL
-      const baseUrl = window.location.origin;
-      setShareUrl(`${baseUrl}/greeting/${id}`);
-    } else {
-      toast({
-        title: "Greeting not found",
-        description: "We couldn't find the greeting you're looking for.",
-        variant: "destructive"
-      });
-      navigate("/create");
-    }
+
+    const fetchGreeting = async () => {
+      try {
+        const foundGreeting = (await fetchGreetingBlob(id)) as Greeting; // Cast to Greeting type
+        if (foundGreeting) {
+          setGreeting(foundGreeting);
+          setEffectsEnabled(foundGreeting.continuousEffectEnabled ?? true);
+          const baseUrl = window.location.origin;
+          setShareUrl(`${baseUrl}/greeting/${id}`);
+        } else {
+          throw new Error("Greeting not found");
+        }
+      } catch (error) {
+        console.error("Error fetching greeting blob:", error);
+        toast({
+          title: "Greeting not found",
+          description: "We couldn't find the greeting you're looking for.",
+          variant: "destructive",
+        });
+        navigate("/create");
+      }
+    };
+
+    fetchGreeting();
   }, [id, navigate, toast]);
 
   const handleCopyLink = () => {
