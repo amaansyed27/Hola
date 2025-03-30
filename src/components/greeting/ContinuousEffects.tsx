@@ -88,16 +88,18 @@ const ContinuousEffects = ({ effect, enabled = true }: ContinuousEffectsProps) =
             
           case 'hearts':
             particle.innerHTML = '❤️';
+            particle.style.color = color;
             particle.style.fontSize = `${size * 1.5}px`;
-            particle.style.bottom = `-${size}px`;
-            particle.style.animation = `float-heart ${Math.random() * 5 + 3}s ease-out forwards`;
-            break;
+            particle.style.top = `-${size}px`;
+            particle.style.animation = `fall-sparkle ${Math.random() * 2 + 2}s linear forwards`;
+            break; 
             
           case 'stars':
             particle.innerHTML = '⭐';
+            particle.style.color = color;
             particle.style.fontSize = `${size * 1.5}px`;
             particle.style.top = `-${size}px`;
-            particle.style.animation = `twinkle-star ${Math.random() * 4 + 3}s ease-in-out forwards`;
+            particle.style.animation = `fall-sparkle ${Math.random() * 2 + 2}s linear forwards`;
             break;
         }
         
