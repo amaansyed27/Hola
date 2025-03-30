@@ -5,6 +5,7 @@ import { Heart, Home, Send } from "lucide-react";
 import GreetingCard from "@/components/greeting/GreetingCard";
 import ContinuousEffects from "@/components/greeting/ContinuousEffects";
 import { fetchGreetingById } from "@/utils/api"; // Add a utility function to fetch data from a backend
+import { getGreetingById } from "@/utils/greetingData"; // Import fallback function
 import { Greeting, ContinuousEffectType } from "@/types/greeting";
 
 const ViewGreetingPage = () => {
@@ -25,8 +26,14 @@ const ViewGreetingPage = () => {
           setGreeting(null);
         }
       } catch (error) {
-        console.error("Error fetching greeting:", error);
-        setGreeting(null);
+        console.error("Error fetching greeting from API, falling back to local storage:", error);
+        const fallbackGreeting = getGreetingById(id); // Fallback to local storage
+        if (fallbackGreeting) {
+          setGreeting(fallbackGreeting);
+          setTimeout(() => setLoaded(true), 500);
+        } else {
+          setGreeting(null);
+        }
       }
     };
 

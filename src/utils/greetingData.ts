@@ -8,15 +8,10 @@ export const generateGreetingId = (): string => {
 
 // Save greeting to localStorage
 export const saveGreeting = (greeting: Greeting): void => {
-  try {
-    const existingGreetingsStr = localStorage.getItem('hola-greetings');
-    const existingGreetings = existingGreetingsStr ? JSON.parse(existingGreetingsStr) as Greeting[] : [];
-    
-    const updatedGreetings = [greeting, ...existingGreetings];
-    localStorage.setItem('hola-greetings', JSON.stringify(updatedGreetings));
-  } catch (error) {
-    console.error('Error saving greeting:', error);
-  }
+  const greetingsStr = localStorage.getItem("greetings") || "{}";
+  const greetings = JSON.parse(greetingsStr);
+  greetings[greeting.id] = greeting;
+  localStorage.setItem("greetings", JSON.stringify(greetings));
 };
 
 // Get greeting by ID
