@@ -1,7 +1,7 @@
 import { Greeting } from "@/types/greeting"; // Import types
 
 const JSONBLOB_BASE_URL = "https://jsonblob.com/api/jsonBlob";
-const BLOB_ID = "1355935448937193472"; // Provided blob ID
+const BLOB_ID = "1380732088805941248"; // Provided blob ID
 
 export const fetchAllGreetings = async (): Promise<Record<string, Greeting>> => {
   const response = await fetch(`${JSONBLOB_BASE_URL}/${BLOB_ID}`, {
